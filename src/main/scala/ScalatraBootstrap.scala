@@ -8,8 +8,8 @@ class ScalatraBootstrap extends LifeCycle {
   val system = ActorSystem()
 
   override def init(context: ServletContext) {
-    context.mount(new GallerificServlet(system), "/*")
-
+    context.mount(new ProxyController(system), "/*")
+		context.mount(new ApiController(), "/api/*")
   }
 
    override def destroy(context:ServletContext) {

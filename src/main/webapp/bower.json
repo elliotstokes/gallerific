@@ -1,0 +1,23 @@
+{
+  "name": "Gallerific",
+  "version": "0.0.0",
+  "homepage": "https://github.com/elliotstokes/gallerific",
+  "authors": [
+    "Elliot Stokes <elliot.stokes@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "js/lib/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs-plugins": "~1.0.3",
+    "requirejs": "~2.1.15",
+    "threejs": "*"
+  }
+}
