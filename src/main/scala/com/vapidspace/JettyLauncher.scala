@@ -12,7 +12,7 @@ object JettyLauncher {
     context.setContextPath("/")
     context.setResourceBase("src/main/webapp")
     
-    context.addServlet(classOf[com.vapidspace.gallerific.ProxyController], "/*")
+    //context.addServlet(classOf[com.vapidspace.gallerific.ProxyController], "/*")
     context.addServlet(classOf[com.vapidspace.gallerific.ApiController], "/api/*")
     context.addServlet(classOf[DefaultServlet], "/")
 
