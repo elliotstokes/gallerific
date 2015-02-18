@@ -54,6 +54,9 @@
       var camera = new THREE.PerspectiveCamera(60, settings.ASPECT, 1, 10000); // Field Of Viw, aspect ratio, near, far
 
       camera.position.y = settings.UNITSIZE * 0.4; // Raise the camera off the ground
+      //set the camera to be in the top left
+      camera.position.x = 50;
+      camera.position.z = 50;
 
       scene.add(camera); // Add the camera to the scene
       

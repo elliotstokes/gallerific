@@ -1,14 +1,19 @@
 define([], function() {
 
   function maze(x,y) {
-    var n=x*y-1;
+    var n=x*y-1,
+        j = 0;
     if (n<0) {alert("illegal maze dimensions");return;}
-    var horiz =[]; for (var j= 0; j<x+1; j++) horiz[j]= [],
-        verti =[]; for (var j= 0; j<y+1; j++) verti[j]= [],
+    var horiz =[], 
+        verti =[], 
         here = [Math.floor(Math.random()*x), Math.floor(Math.random()*y)],
         path = [here],
         unvisited = [];
-    for (var j = 0; j<x+2; j++) {
+
+    for (j= 0; j<y+1; j++) verti[j]= [];
+    for (j= 0; j<x+1; j++) horiz[j]= [];
+
+    for (j = 0; j<x+2; j++) {
       unvisited[j] = [];
       for (var k= 0; k<y+1; k++)
         unvisited[j].push(j>0 && j<x+1 && k>0 && (j != here[0]+1 || k != here[1]+1));
@@ -17,7 +22,7 @@ define([], function() {
       var potential = [[here[0]+1, here[1]], [here[0],here[1]+1],
           [here[0]-1, here[1]], [here[0],here[1]-1]];
       var neighbors = [];
-      for (var j = 0; j < 4; j++)
+      for (j = 0; j < 4; j++)
         if (unvisited[potential[j][0]+1][potential[j][1]+1])
           neighbors.push(potential[j]);
       if (neighbors.length) {
@@ -36,22 +41,23 @@ define([], function() {
   }
  
   function output(m) {
-    var maze= [];
+    var maze= [],
+        k = 0;
     for (var j= 0; j<m.x*2+1; j++) {
       var line= [];
       if (0 === j%2) {
-        for (var k=0; k<m.y*4+1; k++)
-          if (0 === k%4) 
+        for (k=0; k<m.y*2+1; k++)
+          if (0 === k%2) 
             line[k]= 1;
           else
-            if (j>0 && m.verti[j/2-1][Math.floor(k/4)])
+            if (j>0 && m.verti[j/2-1][Math.floor(k/2)])
               line[k]= 0;
             else
               line[k]= 1;
       } else {
-        for (var k=0; k<m.y*4+1; k++)
-          if (0 == k%4)
-            if (k>0 && m.horiz[(j-1)/2][k/4-1])
+        for (k=0; k<m.y*2+1; k++)
+          if (0 === k%2)
+            if (k>0 && m.horiz[(j-1)/2][k/2-1])
               line[k]= 0;
             else
               line[k]= 1;
@@ -64,10 +70,14 @@ define([], function() {
     return maze;
   }
 
+  function convert(m) {
+
+  }
+
 
   return {
     generate: function() {
-      return output(maze(5,5));
+      return output(maze(10,10));
     }
   };
 

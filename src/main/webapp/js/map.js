@@ -7,19 +7,6 @@
   'settings',
   'generator'
   ], function(THREE, settings, generator) {
-  /*var mapLayout = [ // 1  2  3  4  5  6  7  8  9
-   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 0
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 1,], // 1
-   [1, 0, 1, 0, 2, 1, 1, 1, 0, 1,], // 2
-   [1, 0, 1, 0, 0, 0, 0, 1, 0, 1,], // 3
-   [1, 0, 1, 0, 1, 0, 0, 1, 0, 1,], // 4
-   [1, 0, 1, 0, 2, 0, 0, 1, 0, 1,], // 5
-   [1, 0, 1, 0, 1, 0, 0, 1, 0, 1,], // 6
-   [1, 0, 1, 0, 1, 1, 0, 1, 0, 1,], // 7
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 1,], // 8
-   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 9
-   ], */
-
 
 
     var mapLayout = generator.generate(),
@@ -140,14 +127,12 @@
                 picture = new THREE.Mesh(pictureGeometry,new THREE.MeshLambertMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x, 120, z-offset);
                 scene.add(picture);
-                console.log("add pic");
                 imageIndex++;
               }
               if (mapLayout[i][next]) {
                 picture = new THREE.Mesh(pictureGeometry,new THREE.MeshLambertMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x, 120, z+offset);
                 scene.add(picture);
-                console.log("add pic");
                 imageIndex++;
               }
             }
