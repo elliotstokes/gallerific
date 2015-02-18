@@ -14,6 +14,7 @@ The application should be running on heroku
 
 - Currently it is just limited to the most popular photos on instagram.
 - Collision Detection is a bit buggy and you can get stuck in the wall in some places.
+- Automatic genration of map is a bit buggy
 
 ## Build & Run ##
 
