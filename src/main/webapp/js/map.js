@@ -4,9 +4,10 @@
 
  define([
   'THREE',
-  'settings'
-  ], function(THREE, settings) {
-  var mapLayout = [ // 1  2  3  4  5  6  7  8  9
+  'settings',
+  'generator'
+  ], function(THREE, settings, generator) {
+  /*var mapLayout = [ // 1  2  3  4  5  6  7  8  9
    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 0
    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1,], // 1
    [1, 0, 1, 0, 2, 1, 1, 1, 0, 1,], // 2
@@ -17,8 +18,15 @@
    [1, 0, 1, 0, 1, 1, 0, 1, 0, 1,], // 7
    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1,], // 8
    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 9
-   ], mapW = mapLayout.length, mapH = mapLayout[0].length;
-  
+   ], */
+
+
+
+    var mapLayout = generator.generate(),
+        mapW = mapLayout.length, 
+        mapH = mapLayout[0].length;
+
+    console.log(mapLayout);
     var textures = [
       THREE.ImageUtils.loadTexture( 'images/textures/floor.jpg' ),
       THREE.ImageUtils.loadTexture( 'images/textures/bricks.jpeg' ),
@@ -30,7 +38,7 @@
      * @classdesc Generates and manages the map
      **/
     var map = function() {
-      var units = mapW,
+      var units = Math.max(mapW, mapH),
           obstacles = [];
       textures[0].wrapS = textures[1].wrapS =  textures[2].wrapS =  THREE.RepeatWrapping;
       textures[0].wrapT = textures[1].wrapT =  textures[2].wrapT =  THREE.RepeatWrapping;
@@ -98,14 +106,14 @@
         var imageIndex = 0;
         for (var i = 0; i < mapW; i++) {
           for (var j = 0, m = mapLayout[i].length; j < m; j++) {
-            if (mapLayout[i][j]) {
+            console.log(mapLayout[i][j], mapLayout[i][j]===1);
+            if (mapLayout[i][j]===1) {
               var wall = new THREE.Mesh(cube, null);
               wall.position.x = (i - units/2) * settings.UNITSIZE;
               wall.position.y = settings.WALLHEIGHT/2;
               wall.position.z = (j - units/2) * settings.UNITSIZE;
               wall.updateMatrix();
               totalGeom.merge( wall.geometry, wall.matrix );
-            
             } else {
 
               var x = (i - units/2) * settings.UNITSIZE;
@@ -132,12 +140,14 @@
                 picture = new THREE.Mesh(pictureGeometry,new THREE.MeshLambertMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x, 120, z-offset);
                 scene.add(picture);
+                console.log("add pic");
                 imageIndex++;
               }
               if (mapLayout[i][next]) {
                 picture = new THREE.Mesh(pictureGeometry,new THREE.MeshLambertMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x, 120, z+offset);
                 scene.add(picture);
+                console.log("add pic");
                 imageIndex++;
               }
             }
