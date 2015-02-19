@@ -13,12 +13,13 @@
         mapW = mapLayout.length, 
         mapH = mapLayout[0].length;
 
-    console.log(mapLayout);
     var textures = [
       THREE.ImageUtils.loadTexture( 'images/textures/floor.jpg' ),
       THREE.ImageUtils.loadTexture( 'images/textures/bricks.jpeg' ),
       THREE.ImageUtils.loadTexture( 'images/textures/ceiling.jpg' )
     ];
+
+
     /**
      * Contstucts an instance of the map
      * @class
@@ -33,25 +34,27 @@
       textures[2].repeat.set(2*units,2*units);
       textures[1].repeat.set(1,2);
 
+
       var floor = new THREE.Mesh(
         new THREE.BoxGeometry(units * settings.UNITSIZE, 10, units * settings.UNITSIZE),
-        new THREE.MeshPhongMaterial( { map:textures[0] , shininess: 70 } )
+        new THREE.MeshPhongMaterial({map:textures[0], shading: THREE.NoShading})
       );
 
 
       var ceiling = new THREE.Mesh(
         new THREE.BoxGeometry(units * settings.UNITSIZE, 10, units * settings.UNITSIZE),
-        new THREE.MeshPhongMaterial( { map:textures[2] , shininess: 30 } )
+         new THREE.MeshPhongMaterial({map:textures[2],shading: THREE.NoShading})
       );
 
       ceiling.position.y = settings.WALLHEIGHT;
 
-      var cube = new THREE.CubeGeometry(settings.UNITSIZE, settings.WALLHEIGHT, settings.UNITSIZE);
+      var cube = new THREE.BoxGeometry(settings.UNITSIZE, settings.WALLHEIGHT, settings.UNITSIZE);
       var materials = [
         new THREE.MeshLambertMaterial({map:textures[1]})
       ];
 
-      var pictureGeometry = new THREE.CubeGeometry(100, 100, 5);
+      var pictureGeometry = new THREE.BoxGeometry(100, 100, 5);
+      var pictureGeometryZ = new THREE.BoxGeometry(5, 100, 100);
       
       function addChair(scene) {
         var loader = new THREE.JSONLoader(); // init the loader util
@@ -84,16 +87,12 @@
           galleryTextures.push(THREE.ImageUtils.loadTexture(settings.PROXY + '?u=' + photo));
         });
 
-        obstacles.push(floor);
-        scene.add(floor);
-        scene.add(ceiling);
         var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
         var totalGeom = new THREE.Geometry();
         var lightsGeom = new THREE.Geometry();
         var imageIndex = 0;
         for (var i = 0; i < mapW; i++) {
           for (var j = 0, m = mapLayout[i].length; j < m; j++) {
-            console.log(mapLayout[i][j], mapLayout[i][j]===1);
             if (mapLayout[i][j]===1) {
               var wall = new THREE.Mesh(cube, null);
               wall.position.x = (i - units/2) * settings.UNITSIZE;
@@ -105,7 +104,7 @@
 
               var x = (i - units/2) * settings.UNITSIZE;
               var z = (j - units/2) * settings.UNITSIZE;
-              if ((j+i)%2 ===0) {
+              if ((j+i)%5 ===0) {
                 var geometry = new THREE.SphereGeometry( 5, 32, 32 );
                 var sphere = new THREE.Mesh( geometry, null );
 
@@ -113,7 +112,7 @@
                 sphere.updateMatrix();
                 lightsGeom.merge(sphere.geometry, sphere.matrix);
 
-                var light = new THREE.PointLight( 0xffffff, 6, 370 );
+                var light = new THREE.PointLight( 0xffffff, 2, 700 );
                 light.position.set( x, 280, z );
                 scene.add( light );
               }
@@ -123,27 +122,50 @@
               var offset = (settings.UNITSIZE /2) + 2;
               
         
-              if (mapLayout[i][previous]) {
-                picture = new THREE.Mesh(pictureGeometry,new THREE.MeshLambertMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
+              if (mapLayout[i][previous] && (j+i)%2 ===0) {
+                picture = new THREE.Mesh(pictureGeometry,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x, 120, z-offset);
                 scene.add(picture);
                 imageIndex++;
               }
-              if (mapLayout[i][next]) {
-                picture = new THREE.Mesh(pictureGeometry,new THREE.MeshLambertMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
+              if (mapLayout[i][next] && (j+i)%2 ===0) {
+                picture = new THREE.Mesh(pictureGeometry,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x, 120, z+offset);
                 scene.add(picture);
                 imageIndex++;
               }
+
+               if (mapLayout[i-1][j] && (j+i)%2 ===0) {
+                picture = new THREE.Mesh(pictureGeometryZ,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
+                picture.position.set(x - offset, 120, z);
+                scene.add(picture);
+                imageIndex++;
+              }
+              if (mapLayout[i+1][j] && (j+i)%2 ===0) {
+                picture = new THREE.Mesh(pictureGeometryZ,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
+                picture.position.set(x + offset, 120, z);
+                scene.add(picture);
+                imageIndex++;
+              }
+
+
             }
           }
         }
+        //totalGeom.geometry.computeBoundingSphere();
         var walls = new THREE.Mesh(totalGeom,materials[0]);
         scene.add(walls);
         obstacles.push(walls);
         var spheres = new THREE.Mesh(lightsGeom, material);
         scene.add(spheres);
         scene.fog = new THREE.FogExp2(0xD6F1FF, 0.0004);
+        obstacles.push(floor);
+        scene.add(floor);
+        scene.add(ceiling);
+
+        
+        var ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+        scene.add(ambientLight);
       };
 
       /**

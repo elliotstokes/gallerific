@@ -3,8 +3,8 @@
  **/
 
   define(['json!/api/settings'], function(serverSettings) {
-    var height = Math.min(window.innerHeight, 500),
-        width = Math.min(window.innerWidth,700),
+    var height = window.innerHeight,
+        width = window.innerWidth,
         aspect = width / height;
         
     settings = {
@@ -17,7 +17,7 @@
       ASPECT : aspect,
       NEAR : 0.1,
       FAR : 10000,
-      WALLHEIGHT : 300
+      WALLHEIGHT : 290
     };
 
 

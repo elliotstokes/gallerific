@@ -62,11 +62,13 @@
       
   	   
       var controls = new THREE.FirstPersonControls( camera );
-      controls.movementSpeed = 200;
-      controls.lookSpeed = 0.075;
+      controls.movementSpeed = 400;
+      controls.lookSpeed = 0.125;
       controls.lookVertical = false;
 
       // start the renderer
+      renderer.setClearColor( 0xbfd1e5 );
+      //renderer.setPixelRatio( window.devicePixelRatio );
       renderer.setSize(settings.WIDTH, settings.HEIGHT);
 
       // attach the render-supplied DOM element
