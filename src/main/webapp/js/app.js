@@ -51,7 +51,7 @@
     	// create a WebGL renderer, camera
     	// and a scene
     	var renderer = new THREE.WebGLRenderer();
-      var camera = new THREE.PerspectiveCamera(60, settings.ASPECT, 1, 10000); // Field Of Viw, aspect ratio, near, far
+      var camera = new THREE.PerspectiveCamera(60, settings.ASPECT, 1, 3000); // Field Of Viw, aspect ratio, near, far
 
       camera.position.y = settings.UNITSIZE * 0.4; // Raise the camera off the ground
       //set the camera to be in the top left

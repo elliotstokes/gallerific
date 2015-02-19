@@ -112,7 +112,7 @@
                 sphere.updateMatrix();
                 lightsGeom.merge(sphere.geometry, sphere.matrix);
 
-                var light = new THREE.PointLight( 0xffffff, 2, 700 );
+                var light = new THREE.PointLight( 0xffffff, 2, 600 );
                 light.position.set( x, 280, z );
                 scene.add( light );
               }
