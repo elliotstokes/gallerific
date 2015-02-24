@@ -63,12 +63,10 @@
     'THREE',
     'stats',
     'generator',
-    'FirstPersonControls',
-    'EffectComposer',
-    'FilmPass',
-    'RenderPass',
-    'CopyShader'
-  ], function(settings, Map, Collision, Instagram, THREE, Stats, generator) {
+    'postprocessing',
+    "miniMap",
+    'FirstPersonControls'
+  ], function(settings, Map, Collision, Instagram, THREE, Stats, generator, postprocessing, miniMap) {
 
     var stats = new Stats();
     stats.setMode(0); // 0: fps, 1: ms
@@ -78,9 +76,7 @@
     stats.domElement.style.left = '0px';
     stats.domElement.style.top = '0px';
 
-    document.body.appendChild( stats.domElement );
 
-    var scene = new THREE.Scene();
     var collider;
     var instagram = new Instagram('7e86b13292f34aa0b0115cbe18aba06b');
     var mapLayout = generator.generate();
@@ -91,11 +87,15 @@
 
     	// create a WebGL renderer, camera
     	// and a scene
+      var scene = new THREE.Scene();
     	var renderer = new THREE.WebGLRenderer();
       var camera = new THREE.PerspectiveCamera(60, settings.ASPECT, 1, 3500); // Field Of Viw, aspect ratio, near, far
+      var effects = postprocessing.create(renderer, scene, camera);
+
+      renderer.setClearColor( 0xbfd1e5 );
+      renderer.setSize(settings.WIDTH, settings.HEIGHT);
 
       camera.position.y = settings.UNITSIZE * 0.4; // Raise the camera off the ground
-      //set the camera to be in the top left
       camera.position.x = 50;
       camera.position.z = 50;
 
@@ -105,45 +105,31 @@
       var controls = new THREE.FirstPersonControls( camera );
       controls.movementSpeed = 400;
       controls.lookSpeed = 0.125;
-      controls.lookVertical = false;
-
-      // start the renderer
-      renderer.setClearColor( 0xbfd1e5 );
-      renderer.setSize(settings.WIDTH, settings.HEIGHT);
-      var rtParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: true };
-      var effectComposer = new THREE.EffectComposer( renderer, new THREE.WebGLRenderTarget( settings.WIDTH, settings.HEIGHT, rtParameters ) );
-      effectComposer.setSize( settings.WIDTH, settings.HEIGHT );
-      var effectFilm = new THREE.FilmPass( 0.35, 0.025, 648, false );
-      renderPass = new THREE.RenderPass( scene, camera );
-      effectComposer.addPass(renderPass);
-      effectComposer.addPass(effectFilm);
-      var copyPass = new THREE.ShaderPass( THREE.CopyShader);
-      effectComposer.addPass(copyPass);
-      copyPass.renderToScreen = true;
-      // attach the render-supplied DOM element
-      document.getElementById('container').appendChild(renderer.domElement);
-
-
+      controls.lookVertical = false;      
 
       function animate() {
         collider.hit(camera.position, controls);
         stats.begin();
-        // render tahe 3D scene
-        render();
+        renderer.render( scene, camera);
+        effects.render(0.01);
         stats.end();
-        // relaunch the 'timer' 
         requestAnimationFrame( animate );
       }
 
-      // ## Render the 3D Scene
-      function render() {
-        // actually display the scene in the Dom element
-        renderer.render( scene, camera);
-        effectComposer.render(0.01);
-      }
+
+      var previewMapImage = miniMap.create(mapLayout);
+      var image = new Image();
+      image.src = previewMapImage;
+      image.className = 'preview-map';
+      document.getElementById("preview-map").appendChild(image);
+
+
 
       map.create(scene, media);
       collider = new Collision(map.obstacles);
+      document.body.appendChild( stats.domElement );
+      document.getElementById('container').appendChild(renderer.domElement);
+      document.getElementById("loader").className= "hidden";
       animate();
     });
   });
