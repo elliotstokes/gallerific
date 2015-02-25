@@ -47,8 +47,7 @@
       /**
        * Consructs the map
        **/
-      this.create = function(scene, photos) {
-
+      this.create = function(scene, photos, mugshot) {
 
         THREE.ImageUtils.crossOrigin = '';
         var galleryTextures = [];
@@ -56,6 +55,10 @@
         photos.forEach(function(photo) {
           galleryTextures.push(THREE.ImageUtils.loadTexture(settings.PROXY + '?u=' + photo));
         });
+        
+        var texture = new THREE.Texture( mugshot );
+        texture.needsUpdate = true;
+        galleryTextures.push(texture);
 
         var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
         var walllGeom = new THREE.Geometry();

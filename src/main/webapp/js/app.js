@@ -65,8 +65,15 @@
     'generator',
     'postprocessing',
     "miniMap",
+    "mugshot",
     'FirstPersonControls'
-  ], function(settings, Map, Collision, Instagram, THREE, Stats, generator, postprocessing, miniMap) {
+  ], function(settings, Map, Collision, Instagram, THREE, Stats, generator, postprocessing, miniMap, mugshot) {
+
+    mugshot.getMugshot(function(mugshot) {
+
+      document.getElementById('mugshot-creator').className = "hidden";
+      document.getElementById('main-app').className = "";
+
 
     var stats = new Stats();
     stats.setMode(0); // 0: fps, 1: ms
@@ -125,12 +132,13 @@
 
 
 
-      map.create(scene, media);
+      map.create(scene, media, mugshot);
       collider = new Collision(map.obstacles);
       document.body.appendChild( stats.domElement );
       document.getElementById('container').appendChild(renderer.domElement);
       document.getElementById("loader").className= "hidden";
       animate();
+    });
     });
   });
 

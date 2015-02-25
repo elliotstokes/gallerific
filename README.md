@@ -12,7 +12,9 @@ The application should be running on heroku
 
 ##Key features
 
-Uses the growing tree algorithm to generate the layout.
+- Generates a random gallery using the spanning tree maze algorithm
+- populates gallery with photos from instagrams popular section.
+- Uses some post-processing filters to add a film grain effect.
 
 ##Limitations & Bugs##
 
