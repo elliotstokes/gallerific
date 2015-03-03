@@ -56,9 +56,12 @@
           galleryTextures.push(THREE.ImageUtils.loadTexture(settings.PROXY + '?u=' + photo));
         });
         
-        var texture = new THREE.Texture( mugshot );
-        texture.needsUpdate = true;
-        galleryTextures.push(texture);
+        if (mugshot) {
+          var texture = new THREE.Texture( mugshot );
+          texture.needsUpdate = true;
+          galleryTextures.push(texture);
+        }
+
 
         var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
         var walllGeom = new THREE.Geometry();
