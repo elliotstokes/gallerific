@@ -26,8 +26,8 @@
           units = Math.max(mapW, mapH),
           obstacles = [];
 
-      textures[0].wrapS = textures[1].wrapS =  textures[2].wrapS =  THREE.RepeatWrapping;
-      textures[0].wrapT = textures[1].wrapT =  textures[2].wrapT =  THREE.RepeatWrapping;
+      textures[0].wrapS = textures[1].wrapS =  textures[2].wrapS =   THREE.RepeatWrapping;
+      textures[0].wrapT = textures[1].wrapT =  textures[2].wrapT =   THREE.RepeatWrapping;
       textures[0].repeat.set(2,2);
       textures[2].repeat.set(2,2);
       textures[1].repeat.set(1,2);
@@ -35,7 +35,7 @@
       var cube = new THREE.BoxGeometry(settings.UNITSIZE, settings.WALLHEIGHT, settings.UNITSIZE);
       var tile = new THREE.BoxGeometry(settings.UNITSIZE, 10, settings.UNITSIZE);
       var materials = [
-        new THREE.MeshLambertMaterial({map:textures[1]}),
+        new THREE.MeshLambertMaterial({map:textures[1] }),
         new THREE.MeshLambertMaterial({map:textures[0]}),
         new THREE.MeshPhongMaterial({map:textures[2]})
 

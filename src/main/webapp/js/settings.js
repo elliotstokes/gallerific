@@ -3,8 +3,8 @@
  **/
 
   define(['json!/api/settings'], function(serverSettings) {
-    var height = window.innerHeight,
-        width = window.innerWidth,
+    var height = window.innerHeight/2,
+        width = window.innerWidth/2,
         aspect = width / height;
         
     settings = {

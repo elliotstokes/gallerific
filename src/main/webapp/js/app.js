@@ -135,6 +135,7 @@
       map.create(scene, media, mugshot);
       collider = new Collision(map.obstacles);
       document.body.appendChild( stats.domElement );
+      renderer.domElement.id = "View";
       document.getElementById('container').appendChild(renderer.domElement);
       document.getElementById("loader").className= "hidden";
       animate();

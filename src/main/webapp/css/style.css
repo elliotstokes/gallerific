@@ -22,3 +22,27 @@ html, body {
 	top:50%;
 	left:50%;
 }
+
+* {
+			padding: 0;
+			margin: 0;
+			image-rendering:optimizeSpeed;              /* Legal fallback                 */
+			image-rendering:-moz-crisp-edges;           /* Firefox                        */
+			image-rendering:-o-crisp-edges;             /* Opera                          */
+			image-rendering:-webkit-optimize-contrast;  /* Chrome (and eventually Safari) */
+			image-rendering:crisp-edges;                /* CSS3 Proposed                  */
+			image-rendering: optimize-contrast;         /* Possible future browsers.      */
+			-ms-interpolation-mode:bicubic;             /* IE8+                           */      
+		}
+
+		#View {
+			transform-origin: 0% 0%;
+			-ms-transform-origin: 0% 0%;
+			-webkit-transform-origin: 0% 0%;
+			-o-transform-origin: 0% 0%;
+			-moz-transform-origin: 0% 0%;
+			transform: scale(2, 2);
+			-ms-transform: scale(2, 2); 
+			-webkit-transform: scale(2, 2); 
+			-o-transform: scale(2, 2); 
+			-moz-transform: scale(2, 2); 
