@@ -4,7 +4,8 @@ define([
   'EffectComposer',
   'FilmPass',
   'RenderPass',
-  'CopyShader'
+  'CopyShader',
+  'VignetteShader'
 ], 
 function(settings) {
 
@@ -17,6 +18,10 @@ function(settings) {
       renderPass = new THREE.RenderPass( scene, camera );
       effectComposer.addPass(renderPass);
       effectComposer.addPass(effectFilm);
+      var effectVignette = new THREE.ShaderPass(THREE.VignetteShader);
+      effectVignette.uniforms[ "offset" ].value = 1.5;
+      effectVignette.uniforms[ "darkness" ].value = 1.1;
+      effectComposer.addPass(effectVignette);
       var copyPass = new THREE.ShaderPass( THREE.CopyShader);
       effectComposer.addPass(copyPass);
       copyPass.renderToScreen = true;

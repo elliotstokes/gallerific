@@ -41,8 +41,8 @@ html, body {
 			-webkit-transform-origin: 0% 0%;
 			-o-transform-origin: 0% 0%;
 			-moz-transform-origin: 0% 0%;
-			transform: scale(2, 2);
-			-ms-transform: scale(2, 2); 
-			-webkit-transform: scale(2, 2); 
-			-o-transform: scale(2, 2); 
-			-moz-transform: scale(2, 2); 
+			transform: scale(1.33, 1.33);
+			-ms-transform: scale(1.33, 1.33); 
+			-webkit-transform: scale(1.33, 1.33); 
+			-o-transform: scale(1.33, 1.33); 
+			-moz-transform: scale(1.33, 1.33); 

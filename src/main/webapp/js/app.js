@@ -5,6 +5,7 @@
       'THREE': 'lib/threejs/build/three.min',
       'FirstPersonControls': 'lib/FirstPersonControls/THREE.FirstPersonControls',
       'FilmGrain' : 'lib/FilmGrain/FilmShader',
+      'VignetteShader' : 'lib/VignetteShader/VignetteShader',
       'FilmPass' : 'lib/FilmPass/FilmPass',
       'EffectComposer' : 'lib/EffectComposer/EffectComposer',
       'CopyShader': 'lib/CopyShader/CopyShader',
@@ -45,6 +46,10 @@
         exports: 'THREE' 
       },
       FilmGrain: { 
+        deps: ['THREE'], 
+        exports: 'THREE' 
+      },
+      VignetteShader: {
         deps: ['THREE'], 
         exports: 'THREE' 
       },
