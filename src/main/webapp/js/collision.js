@@ -64,7 +64,6 @@ var mouse = new THREE.Vector2();
 }, false );
 
     this.lookingAtPicture = function(camera) {
-      //this.caster.set(currentPosition, this.rays[i]);
       this.caster.setFromCamera(mouse, camera); 
       collisions = this.caster.intersectObjects(pictures);
       if (collisions.length > 0 && collisions[0].distance <= 200) {

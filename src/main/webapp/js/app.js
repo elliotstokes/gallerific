@@ -80,81 +80,81 @@
       document.getElementById('main-app').className = "";
 
 
-    var stats = new Stats();
-    stats.setMode(0); // 0: fps, 1: ms
+      var stats = new Stats();
+      stats.setMode(0);
 
-    // align top-left
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '0px';
-    stats.domElement.style.top = '0px';
+      // align top-left
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.left = '0px';
+      stats.domElement.style.top = '0px';
 
 
-    var collider;
-    var instagram = new Instagram('7e86b13292f34aa0b0115cbe18aba06b');
-    var mapLayout = generator.generate();
-    var map = new Map(mapLayout);
-
-    var media = [];
-    //instagram.getPopularImages(function(media) {
-
-    	// create a WebGL renderer, camera
-    	// and a scene
-      var scene = new THREE.Scene();
-    	var renderer = new THREE.WebGLRenderer();
-      var camera = new THREE.PerspectiveCamera(60, settings.ASPECT, 1, 3500); // Field Of Viw, aspect ratio, near, far
-      var effects = postprocessing.create(renderer, scene, camera);
-
-      renderer.setClearColor( 0xbfd1e5 );
-      renderer.setSize(settings.WIDTH, settings.HEIGHT);
-
-      camera.position.y = settings.UNITSIZE * 0.4; // Raise the camera off the ground
-      camera.position.x = 50;
-      camera.position.z = 50;
-
-      scene.add(camera); // Add the camera to the scene
+      var collider;
+      var instagram = new Instagram('7e86b13292f34aa0b0115cbe18aba06b');
+      var mapLayout = generator.generate();
+      var map = new Map(mapLayout);
+      var minimap = new MiniMap(mapLayout);
       
-  	   
-      var controls = new THREE.FirstPersonControls( camera );
-      controls.movementSpeed = 400;
-      controls.lookSpeed = 0.125;
-      controls.lookVertical = false;      
-      var frame = 0;
-      function animate() {
+      instagram.getPopularImages(function(media) {
 
-        if (frame === 0) {
-          pointImage.src = minimap.createPosition(camera.position);
-          collider.lookingAtPicture(camera);
+      	// create a WebGL renderer, camera
+      	// and a scene
+        var scene = new THREE.Scene();
+      	var renderer = new THREE.WebGLRenderer();
+        var camera = new THREE.PerspectiveCamera(60, settings.ASPECT, 1, 3500);
+        var effects = postprocessing.create(renderer, scene, camera);
+        
+
+        renderer.setClearColor( 0xbfd1e5 );
+        renderer.setSize(settings.WIDTH, settings.HEIGHT);
+
+        camera.position.y = settings.UNITSIZE * 0.4; // Raise the camera off the ground
+        camera.position.x = 50;
+        camera.position.z = 50;
+
+        scene.add(camera); // Add the camera to the scene
+        
+    	   
+        var controls = new THREE.FirstPersonControls( camera );
+        controls.movementSpeed = 400;
+        controls.lookSpeed = 0.125;
+        controls.lookVertical = false;      
+        var frame = 0;
+
+        function animate() {
+          //Do these every few frames as no need to run every frame
+          if (frame === 0) {
+            pointImage.src = minimap.createPosition(camera.position);
+            collider.lookingAtPicture(camera);
+          }
+
+          collider.hit(camera.position, controls);
+          stats.begin();
+          renderer.render( scene, camera);
+          effects.render(0.01);
+          stats.end();
+          frame = (frame+1)%5;
+          requestAnimationFrame( animate );
         }
 
-        collider.hit(camera.position, controls);
-        stats.begin();
-        renderer.render( scene, camera);
-        effects.render(0.01);
-        stats.end();
-        frame = (frame+1)%5;
-        requestAnimationFrame( animate );
-      }
+        var image = new Image();
+        image.src = minimap.create();
+        image.className = 'preview-map';
+        document.getElementById("preview-map").appendChild(image);
 
+        var pointImage = new Image();
+        pointImage.className = 'location-map';
+        document.getElementById("preview-map").appendChild(pointImage);
 
-      var minimap = new MiniMap(mapLayout);
-      var image = new Image();
-      image.src = minimap.create();
-      image.className = 'preview-map';
-      document.getElementById("preview-map").appendChild(image);
-
-      var pointImage = new Image();
-      pointImage.className = 'location-map';
-      document.getElementById("preview-map").appendChild(pointImage);
-
-      map.create(scene, media, mugshot);
-      collider = new Collision(map.obstacles, map.pictures);
-      document.body.appendChild( stats.domElement );
-      renderer.domElement.id = "View";
-      document.getElementById('container').appendChild(renderer.domElement);
-      document.getElementById("loader").className= "hidden";
-      animate();
+        map.create(scene, media, mugshot);
+        collider = new Collision(map.obstacles, map.pictures);
+        document.body.appendChild( stats.domElement );
+        renderer.domElement.id = "View";
+        document.getElementById('container').appendChild(renderer.domElement);
+        document.getElementById("loader").className= "hidden";
+        animate();
+      });
     });
-    });
-  //});
+  });
 
 })();
