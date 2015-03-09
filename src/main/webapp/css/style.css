@@ -17,6 +17,13 @@ html, body {
 	transform: translate3d(0,0,0);
 }
 
+#preview-map img {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+
 #loader {
 	position: absolute;
 	top:50%;

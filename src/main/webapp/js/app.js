@@ -72,7 +72,7 @@
     "miniMap",
     "mugshot",
     'FirstPersonControls'
-  ], function(settings, Map, Collision, Instagram, THREE, Stats, generator, postprocessing, miniMap, mugshot) {
+  ], function(settings, Map, Collision, Instagram, THREE, Stats, generator, postprocessing, MiniMap, mugshot) {
 
     mugshot.getMugshot(function(mugshot) {
 
@@ -94,8 +94,8 @@
     var mapLayout = generator.generate();
     var map = new Map(mapLayout);
 
-
-    instagram.getPopularImages(function(media) {
+    var media = [];
+    //instagram.getPopularImages(function(media) {
 
     	// create a WebGL renderer, camera
     	// and a scene
@@ -118,27 +118,36 @@
       controls.movementSpeed = 400;
       controls.lookSpeed = 0.125;
       controls.lookVertical = false;      
-
+      var frame = 0;
       function animate() {
+
+        if (frame === 0) {
+          pointImage.src = minimap.createPosition(camera.position);
+          collider.lookingAtPicture(camera);
+        }
+
         collider.hit(camera.position, controls);
         stats.begin();
         renderer.render( scene, camera);
         effects.render(0.01);
         stats.end();
+        frame = (frame+1)%5;
         requestAnimationFrame( animate );
       }
 
 
-      var previewMapImage = miniMap.create(mapLayout);
+      var minimap = new MiniMap(mapLayout);
       var image = new Image();
-      image.src = previewMapImage;
+      image.src = minimap.create();
       image.className = 'preview-map';
       document.getElementById("preview-map").appendChild(image);
 
-
+      var pointImage = new Image();
+      pointImage.className = 'location-map';
+      document.getElementById("preview-map").appendChild(pointImage);
 
       map.create(scene, media, mugshot);
-      collider = new Collision(map.obstacles);
+      collider = new Collision(map.obstacles, map.pictures);
       document.body.appendChild( stats.domElement );
       renderer.domElement.id = "View";
       document.getElementById('container').appendChild(renderer.domElement);
@@ -146,6 +155,6 @@
       animate();
     });
     });
-  });
+  //});
 
 })();

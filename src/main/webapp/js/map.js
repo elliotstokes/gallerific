@@ -24,7 +24,8 @@
       var mapW = mapLayout.length, 
           mapH = mapLayout[0].length,
           units = Math.max(mapW, mapH),
-          obstacles = [];
+          obstacles = [],
+          pictures = [];
 
       textures[0].wrapS = textures[1].wrapS =  textures[2].wrapS =   THREE.RepeatWrapping;
       textures[0].wrapT = textures[1].wrapT =  textures[2].wrapT =   THREE.RepeatWrapping;
@@ -108,12 +109,14 @@
                 picture = new THREE.Mesh(pictureGeometry,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x, 120, z-offset);
                 scene.add(picture);
+                pictures.push(picture);
                 imageIndex++;
               }
               if (mapLayout[i][next] && (j+i)%2 ===0) {
                 picture = new THREE.Mesh(pictureGeometry,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x, 120, z+offset);
                 scene.add(picture);
+                pictures.push(picture);
                 imageIndex++;
               }
 
@@ -121,12 +124,14 @@
                 picture = new THREE.Mesh(pictureGeometryZ,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x - offset, 120, z);
                 scene.add(picture);
+                pictures.push(picture);
                 imageIndex++;
               }
               if (mapLayout[i+1][j] && (j+i)%2 ===0) {
                 picture = new THREE.Mesh(pictureGeometryZ,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
                 picture.position.set(x + offset, 120, z);
                 scene.add(picture);
+                pictures.push(picture);
                 imageIndex++;
               }
 
@@ -163,6 +168,10 @@
        **/
       this.__defineGetter__("obstacles", function() {
         return obstacles;
+      });
+
+      this.__defineGetter__("pictures", function() {
+        return pictures;
       });
     };
     

@@ -11,6 +11,12 @@ define([], function() {
 
   return {
     getMugshot: function(callback) {
+      var existingShot = window.sessionStorage.getItem("mugshot");
+      if (existingShot) {
+        var image = new Image();
+        image.src = existingShot;
+        return callback(image);
+      }
 
       video.width = 640;
       video.height = 640;
@@ -42,6 +48,7 @@ define([], function() {
           canvas.height = video.height;
           canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
           var data = canvas.toDataURL('image/png');
+          window.sessionStorage.setItem("mugshot", data);
           webcamStream.stop();
           var image = new Image();
           image.src = data;

@@ -2,7 +2,7 @@ define(['THREE'], function(THREE) {
 
   var clock = new THREE.Clock();
 
-  var collisions = function(obstacles) {
+  var collisions = function(obstacles, pictures) {
     this.rays = [
       new THREE.Vector3(0, 0, 1),
       new THREE.Vector3(1, 0, 1),
@@ -50,6 +50,26 @@ define(['THREE'], function(THREE) {
       }
 
       
+    };
+
+var mouse = new THREE.Vector2();
+    window.addEventListener( 'mousemove', function( event ) {
+
+  // calculate mouse position in normalized device coordinates
+  // (-1 to +1) for both components
+
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 ;   
+
+}, false );
+
+    this.lookingAtPicture = function(camera) {
+      //this.caster.set(currentPosition, this.rays[i]);
+      this.caster.setFromCamera(mouse, camera); 
+      collisions = this.caster.intersectObjects(pictures);
+      if (collisions.length > 0 && collisions[0].distance <= 200) {
+        console.log("looking at ");
+      }
     };
     
   };
