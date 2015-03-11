@@ -102,6 +102,7 @@
           var pictureGlow = new THREE.Mesh(picture.geometry.clone() , customMaterial.clone() );
           pictureGlow.position.set(picture.position.x,picture.position.y,picture.position.z);
           pictureGlow.scale.multiplyScalar(1.5);
+          picture.userData.glow = pictureGlow;
           scene.add( pictureGlow );
           pictureGlow.visible = false;
           glows.push(pictureGlow);

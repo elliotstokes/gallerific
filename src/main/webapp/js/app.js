@@ -131,9 +131,7 @@
             pointImage.src = minimap.createPosition(camera.position);
             collider.lookingAtPicture(camera);
           }
-          map.glows.forEach(function(glow) {
-            if (glow.visible) glow.material.uniforms.viewVector.value = new THREE.Vector3().subVectors( camera.position, glow.position );
-          });
+
           collider.hit(camera.position, controls);
           stats.begin();
           renderer.render( scene, camera);

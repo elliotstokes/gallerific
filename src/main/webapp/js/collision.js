@@ -62,16 +62,16 @@ var mouse = new THREE.Vector2();
   mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 ;   
 
 }, false );
-
+    var lookingAt = null;
     this.lookingAtPicture = function(camera) {
+      if (lookingAt) lookingAt.visible = false;
       this.caster.setFromCamera(mouse, camera); 
       collisions = this.caster.intersectObjects(pictures);
       if (collisions.length > 0 && collisions[0].distance <= 200) {
         var index = collisions[0].object.name;
-        var glow = glows[index];
-        glow.visible = true;
-        glow.needsUpdate = true;
-        
+        lookingAt = collisions[0].object.userData.glow;
+        lookingAt.visible = true;
+        lookingAt.material.uniforms.viewVector.value = new THREE.Vector3().subVectors( camera.position, lookingAt.position );
         if (index < pictureInfo.length) {
           console.log(pictureInfo[index].text);
         } else {
