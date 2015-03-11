@@ -8,6 +8,7 @@
       'VignetteShader' : 'lib/VignetteShader/VignetteShader',
       'FilmPass' : 'lib/FilmPass/FilmPass',
       'EffectComposer' : 'lib/EffectComposer/EffectComposer',
+      'SubdivisionModifier' : 'lib/SubdivisionModifier/SubdivisionModifier',
       'CopyShader': 'lib/CopyShader/CopyShader',
       'MaskPass': 'lib/MaskPass/MaskPass',
       'RenderPass': 'lib/RenderPass/RenderPass',
@@ -26,6 +27,10 @@
       	exports: 'THREE' 
       },
       CopyShader : {
+        deps: ['THREE'], 
+        exports: 'THREE' 
+      },
+      SubdivisionModifier : {
         deps: ['THREE'], 
         exports: 'THREE' 
       },
@@ -90,31 +95,30 @@
 
 
       var collider;
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(60, settings.ASPECT, 1, 3500);
+      camera.position.y = settings.UNITSIZE * 0.4; // Raise the camera off the ground
+      camera.position.x = 50;
+      camera.position.z = 50;
+      scene.add(camera); // Add the camera to the scene
       var instagram = new Instagram('7e86b13292f34aa0b0115cbe18aba06b');
       var mapLayout = generator.generate();
-      var map = new Map(mapLayout);
+      var map = new Map(mapLayout, camera);
       var minimap = new MiniMap(mapLayout);
       
       instagram.getPopularImages(function(media) {
 
       	// create a WebGL renderer, camera
       	// and a scene
-        var scene = new THREE.Scene();
+        
       	var renderer = new THREE.WebGLRenderer();
-        var camera = new THREE.PerspectiveCamera(60, settings.ASPECT, 1, 3500);
+        
         var effects = postprocessing.create(renderer, scene, camera);
         
 
         renderer.setClearColor( 0xbfd1e5 );
         renderer.setSize(settings.WIDTH, settings.HEIGHT);
 
-        camera.position.y = settings.UNITSIZE * 0.4; // Raise the camera off the ground
-        camera.position.x = 50;
-        camera.position.z = 50;
-
-        scene.add(camera); // Add the camera to the scene
-        
-    	   
         var controls = new THREE.FirstPersonControls( camera );
         controls.movementSpeed = 400;
         controls.lookSpeed = 0.125;
@@ -127,7 +131,9 @@
             pointImage.src = minimap.createPosition(camera.position);
             collider.lookingAtPicture(camera);
           }
-
+          map.glows.forEach(function(glow) {
+            if (glow.visible) glow.material.uniforms.viewVector.value = new THREE.Vector3().subVectors( camera.position, glow.position );
+          });
           collider.hit(camera.position, controls);
           stats.begin();
           renderer.render( scene, camera);
@@ -147,7 +153,7 @@
         document.getElementById("preview-map").appendChild(pointImage);
 
         map.create(scene, media, mugshot);
-        collider = new Collision(map.obstacles, map.pictures);
+        collider = new Collision(map.obstacles, map.pictures, media, map.glows);
         document.body.appendChild( stats.domElement );
         renderer.domElement.id = "View";
         document.getElementById('container').appendChild(renderer.domElement);

@@ -12,7 +12,13 @@ define([], function() {
         var photos = [];
         data.data.forEach(function(item) {
           if (item.type==='image') {
-            photos.push(item.images['standard_resolution'].url);
+            photos.push({
+              url: item.images.standard_resolution.url,
+              likes: item.likes.count,
+              text: item.caption ? item.caption.text: '',
+              source: 'instagram',
+              date: item.caption ? item.caption.created_time : null
+            });
           }
         });
         callback(photos);

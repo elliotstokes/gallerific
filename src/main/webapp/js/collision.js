@@ -2,7 +2,7 @@ define(['THREE'], function(THREE) {
 
   var clock = new THREE.Clock();
 
-  var collisions = function(obstacles, pictures) {
+  var collisions = function(obstacles, pictures, pictureInfo, glows) {
     this.rays = [
       new THREE.Vector3(0, 0, 1),
       new THREE.Vector3(1, 0, 1),
@@ -67,7 +67,16 @@ var mouse = new THREE.Vector2();
       this.caster.setFromCamera(mouse, camera); 
       collisions = this.caster.intersectObjects(pictures);
       if (collisions.length > 0 && collisions[0].distance <= 200) {
-        console.log("looking at ");
+        var index = collisions[0].object.name;
+        var glow = glows[index];
+        glow.visible = true;
+        glow.needsUpdate = true;
+        
+        if (index < pictureInfo.length) {
+          console.log(pictureInfo[index].text);
+        } else {
+          console.log("your fat face");
+        }
       }
     };
     

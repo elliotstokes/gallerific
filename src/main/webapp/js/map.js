@@ -5,8 +5,12 @@
  define([
   'THREE',
   'settings',
-  ], function(THREE, settings) {
+  'text!shaders/fragment.shader',
+  'text!shaders/vertex.shader',
+  'SubdivisionModifier'
+  ], function(THREE, settings, fragmentShader, vertexShader) {
 
+    
 
     var textures = [
       THREE.ImageUtils.loadTexture( 'images/textures/floor.jpg' ),
@@ -20,12 +24,27 @@
      * @class
      * @classdesc Generates and manages the map
      **/
-    var map = function(mapLayout) {
+    var map = function(mapLayout, camera) {
       var mapW = mapLayout.length, 
           mapH = mapLayout[0].length,
           units = Math.max(mapW, mapH),
           obstacles = [],
-          pictures = [];
+          pictures = [],
+          glows=[];
+
+      var customMaterial = new THREE.ShaderMaterial({
+        uniforms: { 
+          "c":   { type: "f", value: 0.05 },
+          "p":   { type: "f", value: 4.5 },
+          glowColor: { type: "c", value: new THREE.Color(0xff0000) },
+          viewVector: { type: "v3", value: camera.position}
+        },
+        vertexShader:   vertexShader,
+        fragmentShader: fragmentShader,
+        side: THREE.FrontSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+      });
 
       textures[0].wrapS = textures[1].wrapS =  textures[2].wrapS =   THREE.RepeatWrapping;
       textures[0].wrapT = textures[1].wrapT =  textures[2].wrapT =   THREE.RepeatWrapping;
@@ -42,8 +61,8 @@
 
       ];
 
-      var pictureGeometry = new THREE.BoxGeometry(100, 100, 5);
-      var pictureGeometryZ = new THREE.BoxGeometry(5, 100, 100);
+      var pictureGeometry = new THREE.BoxGeometry(100, 100, 10);
+      var pictureGeometryZ = new THREE.BoxGeometry(10, 100, 100);
 
       /**
        * Consructs the map
@@ -54,7 +73,7 @@
         var galleryTextures = [];
 
         photos.forEach(function(photo) {
-          galleryTextures.push(THREE.ImageUtils.loadTexture(settings.PROXY + '?u=' + photo));
+          galleryTextures.push(THREE.ImageUtils.loadTexture(settings.PROXY + '?u=' + photo.url));
         });
         
         if (mugshot) {
@@ -69,6 +88,25 @@
         var floorGeom = new THREE.Geometry();
         var lightsGeom = new THREE.Geometry();
         var imageIndex = 0;
+
+        var addPicture = function(pictureGeometry,xOffset, zOffset) {
+          var picture = new THREE.Mesh(pictureGeometry,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex]}));
+          picture.position.set(x -xOffset, 120, z-zOffset);
+          picture.name = imageIndex; 
+          scene.add(picture);
+          pictures.push(picture);
+          imageIndex = (imageIndex+1) % galleryTextures.length;
+          var glowGeometry = picture.geometry.clone();
+          var modifier = new THREE.SubdivisionModifier( 1 );
+          modifier.modify( glowGeometry ); 
+          var pictureGlow = new THREE.Mesh(picture.geometry.clone() , customMaterial.clone() );
+          pictureGlow.position.set(picture.position.x,picture.position.y,picture.position.z);
+          pictureGlow.scale.multiplyScalar(1.5);
+          scene.add( pictureGlow );
+          pictureGlow.visible = false;
+          glows.push(pictureGlow);
+        };
+
         for (var i = 0; i < mapW; i++) {
           for (var j = 0, m = mapLayout[i].length; j < m; j++) {
             if (mapLayout[i][j]===1) {
@@ -101,38 +139,21 @@
               }
               var previous = j-1;
               var next = j+1;
-              var picture = null;
+              //var picture = null;
               var offset = (settings.UNITSIZE /2) + 2;
               
-        
               if (mapLayout[i][previous] && (j+i)%2 ===0) {
-                picture = new THREE.Mesh(pictureGeometry,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
-                picture.position.set(x, 120, z-offset);
-                scene.add(picture);
-                pictures.push(picture);
-                imageIndex++;
+                addPicture(pictureGeometry,0, offset);
               }
               if (mapLayout[i][next] && (j+i)%2 ===0) {
-                picture = new THREE.Mesh(pictureGeometry,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
-                picture.position.set(x, 120, z+offset);
-                scene.add(picture);
-                pictures.push(picture);
-                imageIndex++;
+                addPicture(pictureGeometry,0, offset*-1);
               }
 
                if (mapLayout[i-1][j] && (j+i)%2 ===0) {
-                picture = new THREE.Mesh(pictureGeometryZ,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
-                picture.position.set(x - offset, 120, z);
-                scene.add(picture);
-                pictures.push(picture);
-                imageIndex++;
+                addPicture(pictureGeometryZ,offset,0);
               }
               if (mapLayout[i+1][j] && (j+i)%2 ===0) {
-                picture = new THREE.Mesh(pictureGeometryZ,new THREE.MeshBasicMaterial({map:galleryTextures[imageIndex % galleryTextures.length]}));
-                picture.position.set(x + offset, 120, z);
-                scene.add(picture);
-                pictures.push(picture);
-                imageIndex++;
+                addPicture(pictureGeometryZ,offset*-1, 0);
               }
 
 
@@ -172,6 +193,10 @@
 
       this.__defineGetter__("pictures", function() {
         return pictures;
+      });
+
+      this.__defineGetter__('glows', function() {
+        return glows;
       });
     };
     
