@@ -1,7 +1,8 @@
 define(['THREE'], function(THREE) {
 
   var clock = new THREE.Clock();
-
+  var detailsViewer = document.getElementById("details-viewer");
+  var text = document.querySelector('#details-viewer .text');
   var collisions = function(obstacles, pictures, pictureInfo, glows) {
     this.rays = [
       new THREE.Vector3(0, 0, 1),
@@ -63,20 +64,27 @@ var mouse = new THREE.Vector2();
 
 }, false );
     var lookingAt = null;
+    var caption = null;
     this.lookingAtPicture = function(camera) {
-      if (lookingAt) lookingAt.visible = false;
+      if (lookingAt) {
+        lookingAt.visible = false;
+        detailsViewer.className = "hidden";
+      }
       this.caster.setFromCamera(mouse, camera); 
       collisions = this.caster.intersectObjects(pictures);
       if (collisions.length > 0 && collisions[0].distance <= 200) {
         var index = collisions[0].object.name;
         lookingAt = collisions[0].object.userData.glow;
         lookingAt.visible = true;
+        detailsViewer.className = "";
         lookingAt.material.uniforms.viewVector.value = new THREE.Vector3().subVectors( camera.position, lookingAt.position );
         if (index < pictureInfo.length) {
-          console.log(pictureInfo[index].text);
+          caption = pictureInfo[index].text;
         } else {
-          console.log("your fat face");
+          caption = "your fat face";
         }
+
+        text.innerText = caption;
       }
     };
     

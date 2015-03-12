@@ -15,7 +15,7 @@ define([], function() {
             photos.push({
               url: item.images.standard_resolution.url,
               likes: item.likes.count,
-              text: item.caption ? item.caption.text: '',
+              text: item.caption ? item.caption.text: 'No Caption',
               source: 'instagram',
               date: item.caption ? item.caption.created_time : null
             });

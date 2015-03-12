@@ -23,6 +23,30 @@ html, body {
   right: 0;
 }
 
+#details-viewer {
+	z-index: 500;
+	position:absolute;
+	left: 30px;
+	width:300px;
+	height:300px;
+	margin-top:-150px;
+	top:50%;
+}
+
+#details-viewer .background {
+	height:100%;
+	width:100%;
+	position:absolute;
+	background-color: blue;
+	opacity:0.5;
+	z-index:-1;
+}
+
+#details-viewer .content {
+	color:#fff;
+	padding:20px;
+	overflow:scroll;
+}
 
 #loader {
 	position: absolute;
@@ -31,25 +55,27 @@ html, body {
 }
 
 * {
-			padding: 0;
-			margin: 0;
-			image-rendering:optimizeSpeed;              /* Legal fallback                 */
-			image-rendering:-moz-crisp-edges;           /* Firefox                        */
-			image-rendering:-o-crisp-edges;             /* Opera                          */
-			image-rendering:-webkit-optimize-contrast;  /* Chrome (and eventually Safari) */
-			image-rendering:crisp-edges;                /* CSS3 Proposed                  */
-			image-rendering: optimize-contrast;         /* Possible future browsers.      */
-			-ms-interpolation-mode:bicubic;             /* IE8+                           */      
-		}
+	padding: 0;
+	margin: 0;
+	image-rendering:optimizeSpeed;              /* Legal fallback                 */
+	image-rendering:-moz-crisp-edges;           /* Firefox                        */
+	image-rendering:-o-crisp-edges;             /* Opera                          */
+	image-rendering:-webkit-optimize-contrast;  /* Chrome (and eventually Safari) */
+	image-rendering:crisp-edges;                /* CSS3 Proposed                  */
+	image-rendering: optimize-contrast;         /* Possible future browsers.      */
+	-ms-interpolation-mode:bicubic;             /* IE8+                           */      
+}
 
-		#View {
-			transform-origin: 0% 0%;
-			-ms-transform-origin: 0% 0%;
-			-webkit-transform-origin: 0% 0%;
-			-o-transform-origin: 0% 0%;
-			-moz-transform-origin: 0% 0%;
-			transform: scale(1.33, 1.33);
-			-ms-transform: scale(1.33, 1.33); 
-			-webkit-transform: scale(1.33, 1.33); 
-			-o-transform: scale(1.33, 1.33); 
-			-moz-transform: scale(1.33, 1.33); 
+#View {
+	transform-origin: 0% 0%;
+	-ms-transform-origin: 0% 0%;
+	-webkit-transform-origin: 0% 0%;
+	-o-transform-origin: 0% 0%;
+	-moz-transform-origin: 0% 0%;
+	transform: scale(1.33, 1.33);
+	-ms-transform: scale(1.33, 1.33); 
+	-webkit-transform: scale(1.33, 1.33); 
+	-o-transform: scale(1.33, 1.33); 
+	-moz-transform: scale(1.33, 1.33); 
+}
+
