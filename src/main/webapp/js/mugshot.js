@@ -49,7 +49,7 @@ define([], function() {
           canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
           var data = canvas.toDataURL('image/png');
           window.sessionStorage.setItem("mugshot", data);
-          webcamStream.stop();
+          webcamStream.getTracks()[0].stop()
           var image = new Image();
           image.src = data;
           callback(image);

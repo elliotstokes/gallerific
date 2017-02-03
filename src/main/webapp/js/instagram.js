@@ -10,6 +10,7 @@ define([], function() {
       var generatedFunction = 'jsonp'+Math.round(Math.random()*1000001);
       window[generatedFunction] = function(data) {
         var photos = [];
+        if (!data || !data.data) callback([]);
         data.data.forEach(function(item) {
           if (item.type==='image') {
             photos.push({
@@ -25,7 +26,7 @@ define([], function() {
         delete window[generatedFunction];
       };
 
-      var url = baseUrl + "media/popular?client_id=" + clientId + "&callback=" + generatedFunction; 
+      var url = baseUrl + "media/popular?client_id=" + clientId + "&callback=" + generatedFunction;
       console.log(url);
       var script = document.createElement('script');
       script.src = url;
